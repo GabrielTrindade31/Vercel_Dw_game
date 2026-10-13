@@ -1,0 +1,14 @@
+{
+  "name": "unity-web-vercel",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node scripts/extract-build.mjs"
+  },
+  "dependencies": {
+    "fflate": "0.8.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
