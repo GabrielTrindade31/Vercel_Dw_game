@@ -1,133 +1,46 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | DWGames</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07152c">
+  <meta name="description" content="DWGames: explore, pratique SQL e aprenda a interpretar dados em um jogo educativo.">
+  <title>DWGames · Aprender jogando</title>
+  <link rel="icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+</head>
+<body>
+  <a class="skip" href="#game" data-i18n="skip">Ir para o jogo</a>
+  <header class="site-header">
+    <a class="brand" href="#"><span class="brand-icon" aria-hidden="true">DW</span>DWGames<span class="brand-tag" data-i18n="brandTag">Laboratório de dados</span></a>
+    <label class="language"><span data-i18n="language">Idioma</span><select id="language"><option value="pt">Português</option><option value="en">English</option><option value="es">Español</option></select></label>
+  </header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow" data-i18n="eyebrow">EXPLORAR · CONSULTAR · DESCOBRIR</p>
+      <h1 data-i18n="title">Aprenda com cada descoberta.</h1>
+      <p class="lead" data-i18n="lead">Um jogo educativo para conectar exploração, SQL e análise de dados. Entre no mundo de DWGames e transforme perguntas em descobertas.</p>
+    </section>
+    <section id="game" class="game-section" aria-labelledby="game-title">
+      <div class="game-heading"><h2 id="game-title" data-i18n="gameTitle">Seu espaço para explorar</h2><span class="session-label" data-i18n="session">Experiência interativa</span></div>
+      <div id="unity-container">
+        <canvas id="unity-canvas" width="960" height="600" tabindex="0" aria-label="DWGames"></canvas>
+        <div id="unity-loading-bar" role="status" aria-live="polite"><span class="loading-mark" aria-hidden="true">DW</span><p id="loading-text" data-i18n="loading">Preparando sua aventura…</p><div class="progress-track"><div id="unity-progress-bar-full"></div></div><span id="loading-percent">0%</span></div>
+        <div id="unity-warning" role="alert" hidden></div>
       </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">DWGames</div>
-      </div>
-    </div>
-    <script>
-      var canvas = document.querySelector("#unity-canvas");
-
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/buildaqui.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/buildaqui.data.br",
-        frameworkUrl: buildUrl + "/buildaqui.framework.js.br",
-        codeUrl: buildUrl + "/buildaqui.wasm.br",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "DWGames",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
-
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
-
-      document.querySelector("#unity-loading-bar").style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
-      document.body.appendChild(script);
-
-    </script>
-  </body>
+      <div class="game-toolbar"><p data-i18n="sound">Clique no jogo para interagir e habilitar o áudio.</p><button id="unity-fullscreen-button" type="button" disabled data-i18n="fullscreen">⛶ Tela cheia</button></div>
+    </section>
+    <section class="guide" aria-labelledby="guide-title">
+      <div><p class="eyebrow" data-i18n="guideEyebrow">PARA COMEÇAR</p><h2 id="guide-title" data-i18n="guideTitle">Aprender fazendo, no seu ritmo.</h2><p data-i18n="guideIntro">Explore o ambiente, observe os detalhes e use os dados para entender o que encontra.</p></div>
+      <ol class="steps">
+        <li><span class="step-number">01</span><div><h3 data-i18n="step1Title">Explore e observe</h3><p data-i18n="step1">Siga as orientações dentro do jogo. Observe os animais e os elementos de cada cena antes de avançar.</p></div></li>
+        <li><span class="step-number">02</span><div><h3 data-i18n="step2Title">Experimente com SQL</h3><p data-i18n="step2">Leia o desafio, execute sua consulta e compare o resultado com o que esperava. Ajustar e tentar novamente faz parte do aprendizado.</p><code>SELECT … FROM … WHERE …;</code></div></li>
+        <li><span class="step-number">03</span><div><h3 data-i18n="step3Title">Conecte os dados</h3><p data-i18n="step3">Abra o BI disponível no jogo e observe os indicadores. Que padrões aparecem? Que pergunta você faria a partir deles?</p></div></li>
+      </ol>
+    </section>
+    <section class="notes"><details><summary data-i18n="aboutTitle">Qual é a ideia do projeto?</summary><p data-i18n="about">DWGames aproxima os alunos do universo dos dados por meio de uma experiência interativa. A proposta é estimular curiosidade, raciocínio e a conexão entre consultas SQL e interpretação de informações com BI (Business Intelligence). Converse com sua turma sobre as descobertas e explique como chegou às suas respostas.</p></details><details><summary data-i18n="tipsTitle">Dicas para uma boa sessão</summary><ul><li data-i18n="tip1">Prefira um computador com navegador atualizado. Use tela cheia para enxergar melhor o jogo.</li><li data-i18n="tip2">O primeiro carregamento pode levar alguns instantes. Aguarde a barra de progresso.</li><li data-i18n="tip3">Anote suas consultas e descobertas antes de sair: recarregar a página pode reiniciar seu progresso.</li><li data-i18n="tip4">Este seletor traduz as dicas da página. O idioma do jogo depende das opções disponíveis dentro dele.</li></ul></details></section>
+  </main>
+  <footer><span>DWGames</span><p data-i18n="footer">Curiosidade é o ponto de partida. Os dados ajudam a encontrar o caminho.</p></footer>
+  <script src="TemplateData/site.js"></script>
+</body>
 </html>

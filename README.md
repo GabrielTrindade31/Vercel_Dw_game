@@ -22,6 +22,8 @@ O servidor Python permite inspecionar arquivos e builds sem compressão ou com D
 
 ## Hospedagem
 
+A página foi personalizada em `uploads/index.html`, `uploads/TemplateData/style.css` e `uploads/TemplateData/site.js`, com dicas em português, inglês e espanhol. Ao atualizar a build Unity, preserve esses arquivos e atualize os caminhos `Build/` em `site.js` se o nome da build mudar. O seletor de idioma traduz a página, sem alterar o idioma interno da Unity.
+
 `vercel.json` configura Gzip (`.gz`), Brotli (`.br`) e `application/wasm` para WebAssembly. Arquivos `.unityweb` usam o Decompression Fallback da Unity e não recebem Content-Encoding forçado. Builds sem compressão também são aceitas.
 
 COOP/COEP habilitam isolamento entre origens para builds com threads. Recursos externos e integrações precisam permitir esse isolamento; valide no deploy real. Não há redirecionamento genérico para index.html, para que recursos ausentes retornem erro.
