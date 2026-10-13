@@ -1,4 +1,4 @@
-import { readFile, readdir, mkdir, rm, writeFile } from 'node:fs/promises';
+import { readFile, readdir, mkdir, rm, writeFile, cp, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unzipSync } from 'fflate';
@@ -9,8 +9,18 @@ const output = path.join(root, 'public');
 
 try {
   const archives = (await readdir(uploads)).filter(name => name.toLowerCase().endsWith('.zip'));
+  const hasIndex = await stat(path.join(uploads, 'index.html')).then(info => info.isFile()).catch(() => false);
+  if (hasIndex) {
+    if (archives.length) throw new Error('Use a build extraída ou um ZIP em uploads/, sem misturar os dois formatos.');
+    const hasBuild = await stat(path.join(uploads, 'Build')).then(info => info.isDirectory()).catch(() => false);
+    if (!hasBuild) throw new Error('A build extraída precisa de uploads/Build/.');
+    await rm(output, { recursive: true, force: true });
+    await cp(uploads, output, { recursive: true, filter: source => path.basename(source) !== '.gitkeep' });
+    console.log('Build já extraída copiada de uploads/ para public/.');
+    process.exit(0);
+  }
   if (archives.length !== 1) {
-    throw new Error('Coloque exatamente um ZIP da build Web da Unity em uploads/.');
+    throw new Error('Coloque a build extraída (index.html e Build/) ou exatamente um ZIP em uploads/.');
   }
   const files = unzipSync(await readFile(path.join(uploads, archives[0])));
   const names = Object.keys(files).filter(name => !name.startsWith('__MACOSX/'));

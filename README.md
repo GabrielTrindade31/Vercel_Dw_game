@@ -1,10 +1,10 @@
 # Unity Web na Vercel
 
 1. Gere a build Web/WebGL na Unity e compacte a pasta completa, preservando `index.html`, `Build/`, `TemplateData/` e `StreamingAssets/` (quando gerada). Uma pasta externa envolvendo a build é aceita.
-2. Coloque **um único ZIP em `uploads/`**. Remova o anterior ao atualizar o jogo.
+2. Coloque **a build extraída diretamente em `uploads/`** (`uploads/index.html`, `uploads/Build/`, etc.) ou **um único ZIP em `uploads/`**. Não misture os formatos. Ao atualizar, remova os arquivos antigos que não fazem mais parte da build.
 3. Envie ao GitHub e importe este repositório na Vercel.
 
-Use **Framework Preset: Other**, **Root Directory: raiz do repositório**, **Build Command: `npm run build`**, **Output Directory: `public`**. Essas opções já estão no `vercel.json`. O comando apenas extrai o ZIP; não compila a Unity. O primeiro deploy exige o ZIP.
+Use **Framework Preset: Other**, **Root Directory: raiz do repositório**, **Build Command: `npm run build`**, **Output Directory: `public`**. Essas opções já estão no `vercel.json`. O comando copia a build extraída ou extrai o ZIP; não compila a Unity. O primeiro deploy exige uma build em um desses formatos.
 
 O GitHub bloqueia arquivos Git comuns acima de 100 MiB. Para builds maiores, reduza os arquivos ou adote outro fluxo de distribuição. Um ponteiro Git LFS não substitui o ZIP neste fluxo.
 
